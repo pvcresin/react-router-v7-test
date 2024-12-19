@@ -1,20 +1,23 @@
-import { Link } from "react-router";
+import { generatePath, Link } from "react-router";
+import { ROOT, homePath, userPath } from "~/routes";
 import type { Route } from "./+types/user";
-import { homePath, userPath } from "~/routes";
 
-const userId = "pvcresin";
+const apiClient = {
+  getData: (id: string) => `data for ${id}`,
+};
 
-export default function User({ params }: Route.ComponentProps) {
-  console.log(params.id);
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  return apiClient.getData(params.id);
+}
 
+export default function User({ params, loaderData }: Route.ComponentProps) {
   return (
-    <h1>
-      User
+    <div>
+      userId: {params.id}, data: {loaderData}
       <p>
         <Link to={homePath()}>/</Link>{" "}
-        <Link to={userPath({ userId })}>/users/pvcresin</Link>
+        <Link to={userPath({ userId: "pvcresin" })}>/users/pvcresin</Link>
       </p>
-      <p>{JSON.stringify(params)}</p>
-    </h1>
+    </div>
   );
 }
